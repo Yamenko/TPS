@@ -41,10 +41,13 @@ ATPSCharacter::ATPSCharacter()
 	TopDownCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	TopDownCameraComponent->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
+	// C: / UE / UE4_education / Part2 / TPS / Source / TPS / TPSCharacter.h
+	// Material'/Game/Blueprint/Character/M_Cursor_Decal.M_Cursor_Decal'
+
 	// Create a decal in the world to show the cursor's location
 	CursorToWorld = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");
 	CursorToWorld->SetupAttachment(RootComponent);
-	static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Material'/Game/TopDownCPP/Blueprints/M_Cursor_Decal.M_Cursor_Decal'"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Material'/Game/Blueprint/Character/M_Cursor_Decal.M_Cursor_Decal'")); // /Game/TopDownCPP/Blueprints/M_Cursor_Decal
 	if (DecalMaterialAsset.Succeeded())
 	{
 		CursorToWorld->SetDecalMaterial(DecalMaterialAsset.Object);
@@ -59,7 +62,7 @@ ATPSCharacter::ATPSCharacter()
 
 void ATPSCharacter::Tick(float DeltaSeconds)
 {
-    Super::Tick(DeltaSeconds);
+	Super::Tick(DeltaSeconds);
 
 	if (CursorToWorld != nullptr)
 	{

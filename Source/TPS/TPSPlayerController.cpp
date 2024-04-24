@@ -33,8 +33,8 @@ void ATPSPlayerController::SetupInputComponent()
 	InputComponent->BindAction("SetDestination", IE_Released, this, &ATPSPlayerController::OnSetDestinationReleased);
 
 	// support touch devices 
-	InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &ATPSPlayerController::MoveToTouchLocation);
-	InputComponent->BindTouch(EInputEvent::IE_Repeat, this, &ATPSPlayerController::MoveToTouchLocation);
+	InputComponent->BindTouch(IE_Pressed, this, &ATPSPlayerController::MoveToTouchLocation);
+	InputComponent->BindTouch(IE_Repeat, this, &ATPSPlayerController::MoveToTouchLocation);
 
 	InputComponent->BindAction("ResetVR", IE_Pressed, this, &ATPSPlayerController::OnResetVR);
 }
@@ -52,7 +52,8 @@ void ATPSPlayerController::MoveToMouseCursor()
 		{
 			if (MyPawn->GetCursorToWorld())
 			{
-				UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, MyPawn->GetCursorToWorld()->GetComponentLocation());
+				UAIBlueprintHelperLibrary::SimpleMoveToLocation(
+					this, MyPawn->GetCursorToWorld()->GetComponentLocation());
 			}
 		}
 	}
@@ -89,7 +90,7 @@ void ATPSPlayerController::SetNewMoveDestination(const FVector DestLocation)
 	APawn* const MyPawn = GetPawn();
 	if (MyPawn)
 	{
-		float const Distance = FVector::Dist(DestLocation, MyPawn->GetActorLocation());
+		const float Distance = FVector::Dist(DestLocation, MyPawn->GetActorLocation());
 
 		// We need to issue move command only if far enough in order for walk animation to play correctly
 		if ((Distance > 120.0f))
