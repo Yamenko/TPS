@@ -10,6 +10,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Materials/Material.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Engine/World.h"
 
 ATPSCharacter::ATPSCharacter()
@@ -90,4 +92,46 @@ void ATPSCharacter::Tick(float DeltaSeconds)
 			CursorToWorld->SetWorldRotation(CursorR);
 		}
 	}
+
+	MovementTick(DeltaSeconds);
 }
+
+void ATPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ATPSCharacter::InputAxisX);
+	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &ATPSCharacter::InputAxisY);
+
+}
+
+void ATPSCharacter::InputAxisX(float Value)
+{
+	AxisX = Value;
+}
+
+void ATPSCharacter::InputAxisY(float Value)
+{
+	AxisY = Value;
+}
+
+void ATPSCharacter::MovementTick(float DeltaTime)
+{
+	AddMovementInput(FVector(1.0f, 0.0f, 0.0f), AxisX);
+	AddMovementInput(FVector(0.0f, 1.0f, 0.0f), AxisY);
+
+	APlayerController* MyController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (MyController)
+	{
+		FHitResult ResultHit;
+		MyController->GetHitResultUnderCursorByChannel(TraceTypeQuery6, false, ResultHit);
+
+		FRotator NewRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), ResultHit.Location);
+
+		NewRotation.Pitch = 0.0f;
+		NewRotation.Roll = 0.0f;
+
+		SetActorRotation(NewRotation);
+	}
+}
+	
