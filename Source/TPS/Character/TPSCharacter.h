@@ -1,5 +1,4 @@
 
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -17,7 +16,6 @@ public:
 
 	// Called every frame.
 	virtual void Tick(float DeltaSeconds) override;
-
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 	/** Returns TopDownCameraComponent subobject **/
@@ -32,6 +30,9 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* TopDownCameraComponent;
 
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	//class USpringArmComponent* SpringArmComopnent;
+
 	/** Camera boom positioning the camera above the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
@@ -41,14 +42,14 @@ private:
 	class UDecalComponent* CursorToWorld;
 
 public:
+	float AxisX = 0.0f;
+	float AxisY = 0.0f;
+	float AxisMouseWeel = 0.0f;
 	UFUNCTION()
 	void InputAxisX(float Value);
 
 	UFUNCTION()
 	void InputAxisY(float Value);
-
-	float AxisX = 0.0f;
-	float AxisY = 0.0f;
 
 	UFUNCTION()
 	void MovementTick(float DeltaTime);
@@ -63,4 +64,17 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	EMovementState CurrentMovementState = EMovementState::Run_state;
+
+	//----------------------------------------------------------------
+	//				SPRING ARM COMPONENT
+	//----------------------------------------------------------------
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	float MaxLengthSpringArm = 1200.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	float MinLengthSpringArm = 500.0f;
+
+	UFUNCTION()
+	void SetNewArmLength(float Value);
 };
+

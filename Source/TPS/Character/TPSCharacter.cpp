@@ -43,9 +43,6 @@ ATPSCharacter::ATPSCharacter()
 	TopDownCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	TopDownCameraComponent->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
-	// C: / UE / UE4_education / Part2 / TPS / Source / TPS / TPSCharacter.h
-	// Material'/Game/Blueprint/Character/M_Cursor_Decal.M_Cursor_Decal'
-
 	// Create a decal in the world to show the cursor's location
 	CursorToWorld = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");
 	CursorToWorld->SetupAttachment(RootComponent);
@@ -102,16 +99,26 @@ void ATPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ATPSCharacter::InputAxisX);
 	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &ATPSCharacter::InputAxisY);
+	PlayerInputComponent->BindAxis(TEXT("MouseWeel"), this, &ATPSCharacter::SetNewArmLength);
 
 }
 
-void ATPSCharacter::InputAxisX(float Value)
+void ATPSCharacter::SetNewArmLength(float Value)
 {
+	//UE_LOG(LogTemp, Warning, TEXT("The float value is: %f"), Value);
+
+	if ((Value < 0 && GetCameraBoom()->TargetArmLength > MinLengthSpringArm) ||
+		(Value > 0 && GetCameraBoom()->TargetArmLength < MaxLengthSpringArm)) {
+
+		GetCameraBoom()->TargetArmLength+= Value;
+	}
+}
+
+void ATPSCharacter::InputAxisX(float Value) {
 	AxisX = Value;
 }
 
-void ATPSCharacter::InputAxisY(float Value)
-{
+void ATPSCharacter::InputAxisY(float Value) {
 	AxisY = Value;
 }
 
