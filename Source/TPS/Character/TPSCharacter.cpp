@@ -114,6 +114,21 @@ void ATPSCharacter::SetNewArmLength(float Value)
 	}
 }
 
+bool ATPSCharacter::CanRun()
+{
+	return (Stamina > 0);
+}
+
+bool ATPSCharacter::CanStartRun()
+{
+	return (Stamina > 100);
+}
+
+void ATPSCharacter::ChangeStamina(float Value)
+{
+	Stamina += Value;
+}
+
 void ATPSCharacter::InputAxisX(float Value) {
 	AxisX = Value;
 }
@@ -124,9 +139,11 @@ void ATPSCharacter::InputAxisY(float Value) {
 
 void ATPSCharacter::MovementTick(float DeltaTime)
 {
+	// Movement
 	AddMovementInput(FVector(1.0f, 0.0f, 0.0f), AxisX);
 	AddMovementInput(FVector(0.0f, 1.0f, 0.0f), AxisY);
 
+	// Rotation
 	APlayerController* MyController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if (MyController)
 	{
@@ -139,6 +156,26 @@ void ATPSCharacter::MovementTick(float DeltaTime)
 		NewRotation.Roll = 0.0f;
 
 		SetActorRotation(NewRotation);
+
+		FVector RunVector =  GetActorForwardVector();
+		
+	}
+
+
+
+	// Check Run state
+	if (CurrentMovementState == EMovementState::Run_state) {
+		if (CanRun()) {
+			ChangeStamina(-1.0f);
+			UE_LOG(LogTemp, Warning, TEXT("The current stamina value : %f"), Stamina);
+		}
+		else {
+			ChangeMovementState(EMovementState::Walk_state);
+		}
+	}
+	else if (Stamina < 1000) {
+		ChangeStamina(1.0f);
+		UE_LOG(LogTemp, Warning, TEXT("The current stamina value : %f"), Stamina);
 	}
 }
 
@@ -155,7 +192,9 @@ void ATPSCharacter::CharacterUpdate()
 		NewSpeed = MovementInfo.WalkSpeed;
 		break;
 	case EMovementState::Run_state:
-		NewSpeed = MovementInfo.RunSpeed;
+		if (CanStartRun()) {
+			NewSpeed = MovementInfo.RunSpeed;
+		}
 		break;
 	}
 

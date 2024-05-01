@@ -42,6 +42,10 @@ private:
 	class UDecalComponent* CursorToWorld;
 
 public:
+	//================================================================
+	//						MOVEMENT BLOCK
+	//----------------------------------------------------------------
+#pragma region MovementBlock
 	float AxisX = 0.0f;
 	float AxisY = 0.0f;
 	float AxisMouseWeel = 0.0f;
@@ -64,10 +68,13 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	EMovementState CurrentMovementState = EMovementState::Run_state;
+#pragma endregion
+	//================================================================
 
+	//================================================================
+	//					SPRING ARM COMPONENT
 	//----------------------------------------------------------------
-	//				SPRING ARM COMPONENT
-	//----------------------------------------------------------------
+#pragma region SpringArmComponent
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	float MaxLengthSpringArm = 1200.0f;
 
@@ -76,5 +83,23 @@ public:
 
 	UFUNCTION()
 	void SetNewArmLength(float Value);
+#pragma endregion
+	//================================================================
+	
+	//================================================================
+	//					CHARACTER PARAMETERS
+	//----------------------------------------------------------------
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character")
+	float Stamina = 1000.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character")
+	float Health = 1000.0f;
+
+	bool CanRun();		// check stamina when character run
+	bool CanStartRun(); // check the stamina and get permition to run 
+	void ChangeStamina(float Value);
+
+
+
 };
 
