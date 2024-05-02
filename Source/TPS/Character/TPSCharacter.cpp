@@ -116,17 +116,32 @@ void ATPSCharacter::SetNewArmLength(float Value)
 
 bool ATPSCharacter::CanRun()
 {
-	return (Stamina > 0);
+	CalculateAngleBetweenVectors();
+	return (Stamina > 0 && abs(AngleBetwenVectors) < 15);
 }
 
 bool ATPSCharacter::CanStartRun()
 {
-	return (Stamina > 100);
+	CalculateAngleBetweenVectors();
+	return (Stamina > 100 && abs(AngleBetwenVectors) < 15);
 }
 
 void ATPSCharacter::ChangeStamina(float Value)
 {
 	Stamina += Value;
+}
+
+void ATPSCharacter::CalculateAngleBetweenVectors()
+{
+	// Проверка угла между направлением движения и направлением взгляда
+	FVector LookVector = GetActorForwardVector();	// направление взгляда (сразу единичный вектора)
+	FVector RunVector = GetVelocity();				// направление движения
+	RunVector.Normalize();							// нормализуем вектор (получаем единичный вектор)
+
+
+	
+	AngleBetwenVectors = acos(Dot3(LookVector, RunVector)) * 180 / PI;
+	UE_LOG(LogTemp, Warning, TEXT("Angle between Look and Move vector: %f"), AngleBetwenVectors);
 }
 
 void ATPSCharacter::InputAxisX(float Value) {
@@ -155,19 +170,14 @@ void ATPSCharacter::MovementTick(float DeltaTime)
 		NewRotation.Pitch = 0.0f;
 		NewRotation.Roll = 0.0f;
 
-		SetActorRotation(NewRotation);
-
-		FVector RunVector =  GetActorForwardVector();
-		
+		SetActorRotation(NewRotation);		
 	}
-
-
 
 	// Check Run state
 	if (CurrentMovementState == EMovementState::Run_state) {
 		if (CanRun()) {
 			ChangeStamina(-1.0f);
-			UE_LOG(LogTemp, Warning, TEXT("The current stamina value : %f"), Stamina);
+			//UE_LOG(LogTemp, Warning, TEXT("The current stamina value : %f"), Stamina);
 		}
 		else {
 			ChangeMovementState(EMovementState::Walk_state);
@@ -175,7 +185,7 @@ void ATPSCharacter::MovementTick(float DeltaTime)
 	}
 	else if (Stamina < 1000) {
 		ChangeStamina(1.0f);
-		UE_LOG(LogTemp, Warning, TEXT("The current stamina value : %f"), Stamina);
+		//UE_LOG(LogTemp, Warning, TEXT("The current stamina value : %f"), Stamina);
 	}
 }
 

@@ -94,10 +94,15 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character")
 	float Health = 1000.0f;
+	
+	float AngleBetwenVectors = 0.0f;
 
 	bool CanRun();		// check stamina when character run
 	bool CanStartRun(); // check the stamina and get permition to run 
 	void ChangeStamina(float Value);
+
+	void CalculateAngleBetweenVectors();
+
 
 
 
