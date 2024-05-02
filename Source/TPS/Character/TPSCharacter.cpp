@@ -117,13 +117,13 @@ void ATPSCharacter::SetNewArmLength(float Value)
 bool ATPSCharacter::CanRun()
 {
 	CalculateAngleBetweenVectors();
-	return (Stamina > 0 && abs(AngleBetwenVectors) < 15); // дополнительная проверка отклонения направления движения и взгляда
+	return (Stamina > 0 && abs(AngleBetwenVectors) < 20); // дополнительная проверка отклонения направления движения и взгляда
 }
 
 bool ATPSCharacter::CanStartRun()
 {
 	CalculateAngleBetweenVectors();
-	return (Stamina > 100 && abs(AngleBetwenVectors) < 15);  // дополнительная проверка отклонения направления движения и взгляда
+	return (Stamina > 100 && abs(AngleBetwenVectors) < 20);  // дополнительная проверка отклонения направления движения и взгляда
 }
 
 void ATPSCharacter::ChangeStamina(float Value)
