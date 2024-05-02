@@ -117,13 +117,13 @@ void ATPSCharacter::SetNewArmLength(float Value)
 bool ATPSCharacter::CanRun()
 {
 	CalculateAngleBetweenVectors();
-	return (Stamina > 0 && abs(AngleBetwenVectors) < 15);
+	return (Stamina > 0 && abs(AngleBetwenVectors) < 15); // дополнительная проверка отклонения направления движения и взгляда
 }
 
 bool ATPSCharacter::CanStartRun()
 {
 	CalculateAngleBetweenVectors();
-	return (Stamina > 100 && abs(AngleBetwenVectors) < 15);
+	return (Stamina > 100 && abs(AngleBetwenVectors) < 15);  // дополнительная проверка отклонения направления движения и взгляда
 }
 
 void ATPSCharacter::ChangeStamina(float Value)
@@ -139,7 +139,7 @@ void ATPSCharacter::CalculateAngleBetweenVectors()
 	RunVector.Normalize();							// нормализуем вектор (получаем единичный вектор)
 
 
-	
+	// Рассет угла 
 	AngleBetwenVectors = acos(Dot3(LookVector, RunVector)) * 180 / PI;
 	UE_LOG(LogTemp, Warning, TEXT("Angle between Look and Move vector: %f"), AngleBetwenVectors);
 }
