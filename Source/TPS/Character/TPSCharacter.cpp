@@ -111,6 +111,7 @@ void ATPSCharacter::SetNewArmLength(float Value)
 		(Value > 0 && GetCameraBoom()->TargetArmLength < MaxLengthSpringArm)) {
 
 		GetCameraBoom()->TargetArmLength+= Value;
+
 	}
 }
 
